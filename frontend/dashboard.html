@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Sistema de Avaliação de Filmes</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="logo">
+          <i class="fas fa-film"></i>
+          <h1>CineReview</h1>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Pesquisar filmes..." />
+          <button>
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div class="user-menu">
+          <span id="username">Usuário</span>
+          <button id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <aside class="sidebar">
+        <div class="filter-section">
+          <h3>Filtros</h3>
+          <div class="filter-group">
+            <h4>Gêneros</h4>
+            <ul id="categoryList">
+              <!-- Os gêneros serão adicionados aqui dinamicamente -->
+            </ul>
+          </div>
+          <div class="filter-group">
+            <h4>Ano</h4>
+            <select id="year-filter">
+              <option value="">Todos os anos</option>
+              <!-- As opções de ano serão adicionadas aqui dinamicamente -->
+            </select>
+          </div>
+          <div class="filter-group">
+            <h4>Avaliação Mínima</h4>
+            <div class="rating-filter">
+              <input
+                type="range"
+                id="rating-range"
+                min="0"
+                max="5"
+                step="0.5"
+                value="0"
+              />
+              <span id="rating-value">0+</span>
+            </div>
+          </div>
+          <button id="apply-filters" class="btn-primary">
+            Aplicar Filtros
+          </button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="trending-section">
+          <h2>Em Tendência</h2>
+          <div id="trending-movies" class="movie-grid">
+            <!-- Filmes em tendência serão adicionados aqui dinamicamente -->
+          </div>
+        </section>
+
+        <section class="suggested-section">
+          <h2>Sugeridos para Você</h2>
+          <div id="suggested-movies" class="movie-grid">
+            <!-- Filmes sugeridos serão adicionados aqui dinamicamente -->
+          </div>
+        </section>
+      </main>
+
+      <aside class="stats-sidebar">
+        <div class="stats-section">
+          <h3>Estatísticas</h3>
+          <div class="stat-item">
+            <i class="fas fa-film"></i>
+            <span
+              >Total de Filmes: <strong id="stats-total-movies">0</strong></span
+            >
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-star"></i>
+            <span>Avaliações: <strong id="stats-total-ratings">0</strong></span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-users"></i>
+            <span>Usuários: <strong id="stats-total-users">0</strong></span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2023 CineReview. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

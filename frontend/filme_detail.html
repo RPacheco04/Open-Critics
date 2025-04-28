@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Filme - Sistema de Avaliação de Filmes</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/filme_detail.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="logo">
+          <i class="fas fa-film"></i>
+          <h1>CineReview</h1>
+        </div>
+        <div class="search-bar">
+          <input type="text" placeholder="Pesquisar filmes..." />
+          <button>
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div class="user-menu">
+          <span id="username">Usuário</span>
+          <button id="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <main class="content">
+        <section class="filme-header">
+          <div class="filme-cover">
+            <img
+              id="filme-capa"
+              src="img/default-movie.jpg"
+              alt="Capa do filme"
+            />
+          </div>
+          <div class="filme-info">
+            <h1 id="filme-titulo">Carregando título...</h1>
+            <div class="filme-meta">
+              <span id="filme-ano">Ano: --</span>
+              <span id="filme-duracao">Duração: -- min</span>
+              <div class="filme-rating">
+                <span id="filme-nota">Nota: --</span>
+                <div class="filme-stars">
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <span id="filme-total-avaliacoes">(0 avaliações)</span>
+              </div>
+            </div>
+            <div class="filme-generos" id="filme-generos">
+              <!-- Gêneros serão adicionados dinamicamente -->
+            </div>
+            <div class="filme-actions">
+              <button id="btn-avaliar" class="btn-primary">
+                <i class="fas fa-star"></i> Avaliar
+              </button>
+              <button id="btn-adicionar-lista" class="btn-secondary">
+                <i class="fas fa-list"></i> Adicionar à Lista
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="filme-detalhes">
+          <div class="filme-sinopse">
+            <h2>Sinopse</h2>
+            <p id="filme-sinopse-texto">Carregando sinopse...</p>
+          </div>
+
+          <div class="filme-equipe">
+            <h2>Equipe</h2>
+            <div class="equipe-info">
+              <div class="equipe-item">
+                <strong>Diretor:</strong>
+                <span id="filme-diretor">--</span>
+              </div>
+              <div class="equipe-item">
+                <strong>Elenco:</strong>
+                <span id="filme-elenco">--</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="avaliacoes-section">
+          <h2>Avaliações</h2>
+          <div id="avaliacoes-lista">
+            <!-- Avaliações serão adicionadas dinamicamente -->
+            <div class="no-avaliacoes">
+              Nenhuma avaliação encontrada para este filme.
+            </div>
+          </div>
+        </section>
+
+        <section id="avaliacao-form-section" class="avaliacao-form hidden">
+          <h2>Sua Avaliação</h2>
+          <form id="form-avaliacao">
+            <div class="rating-stars">
+              <span>Sua nota:</span>
+              <div class="stars-select">
+                <i class="fas fa-star" data-value="1"></i>
+                <i class="far fa-star" data-value="2"></i>
+                <i class="far fa-star" data-value="3"></i>
+                <i class="far fa-star" data-value="4"></i>
+                <i class="far fa-star" data-value="5"></i>
+              </div>
+              <span id="rating-value">1/5</span>
+            </div>
+            <div class="form-group">
+              <label for="comentario">Comentário:</label>
+              <textarea
+                id="comentario"
+                name="comentario"
+                rows="4"
+                placeholder="Compartilhe sua opinião sobre o filme..."
+              ></textarea>
+            </div>
+            <div class="form-buttons">
+              <button type="submit" class="btn-primary">
+                Enviar Avaliação
+              </button>
+              <button type="button" id="cancel-review" class="btn-secondary">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <aside class="sidebar">
+        <div class="related-movies">
+          <h3>Filmes Relacionados</h3>
+          <div id="related-movies-list">
+            <!-- Filmes relacionados serão adicionados dinamicamente -->
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2023 CineReview. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/filme_detail.js"></script>
+  </body>
+</html>

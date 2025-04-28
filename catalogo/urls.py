@@ -10,5 +10,8 @@ router.register(r"avaliacoes", views.AvaliacaoViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("login/", views.login, name="login"),
+    path("login/", views.user_login, name="login"),
+    path("logout/", views.user_logout, name="logout"),
+    path("register/", views.UserRegisterView.as_view(), name="register"),
+    path("estatisticas/", views.EstatisticasView.as_view(), name="estatisticas"),
 ]

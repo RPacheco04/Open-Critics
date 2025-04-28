@@ -1,0 +1,267 @@
+/* Estilos específicos para a página de dashboard */
+body {
+  background-color: #f8f9fa;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.dashboard-header {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  display: flex;
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 10px 15px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: relative;
+  margin-left: 20px;
+}
+
+.profile-menu-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: var(--text-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+  text-decoration: none;
+}
+
+/* Main content layout */
+.dashboard-main {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  margin-right: 20px;
+  height: fit-content;
+}
+
+.categories h3 {
+  margin-bottom: 15px;
+  color: var(--dark-gray);
+  font-size: 18px;
+}
+
+.category-list {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.category-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-checkbox {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.filter-controls {
+  margin-top: 20px;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.filter-button {
+  width: 100%;
+  padding: 10px;
+}
+
+/* Main content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.content-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+}
+
+.content-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.section-description {
+  color: var(--medium-gray);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Trending carousel */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px 0;
+  scroll-behavior: smooth;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  width: 150px;
+}
+
+.film-poster {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.film-title {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Film grid */
+.film-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.film-card {
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.film-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Site info */
+.info-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.info-content p {
+  margin-bottom: 10px;
+}
+
+/* Media queries */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboard-main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    max-width: none;
+    margin-bottom: 10px;
+  }
+
+  .profile-menu {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .film-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
