@@ -62,7 +62,6 @@ class FilmeListSerializer(serializers.ModelSerializer):
             "id",
             "titulo",
             "ano",
-            "capa_url",
             "generos",
             "media_avaliacoes",
             "quantidade_avaliacoes",
@@ -86,17 +85,11 @@ class FilmeDetailSerializer(serializers.ModelSerializer):
             "titulo",
             "sinopse",
             "ano",
-            "diretor",
-            "elenco",
-            "duracao",
-            "capa_url",
             "generos",
             "generos_ids",
             "media_avaliacoes",
             "quantidade_avaliacoes",
             "data_cadastro",
-            "is_trending",
-            "visualizacoes",
         )
 
 

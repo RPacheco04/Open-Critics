@@ -5,55 +5,51 @@ body {
   margin: 0;
 }
 
-.filme-detail-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 30px 20px;
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 20px auto;
+  gap: 30px;
 }
 
-.filme-content {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: var(--box-shadow);
-  overflow: hidden;
-  padding: 30px;
+.content {
+  flex: 1;
+  min-width: 65%;
+}
+
+.sidebar {
+  width: 280px;
 }
 
 /* Header com poster e informações */
 .filme-header {
   display: flex;
   margin-bottom: 30px;
-}
-
-.filme-poster {
-  flex: 0 0 240px;
-  margin-right: 30px;
-}
-
-.poster-image,
-.poster-placeholder {
-  width: 100%;
-  height: 360px;
+  background-color: white;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
-.poster-placeholder {
-  background-color: var(--light-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--medium-gray);
-  padding: 20px;
+.filme-cover {
+  width: 200px;
+  margin-right: 25px;
+  flex-shrink: 0;
+}
+
+.filme-cover img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .filme-info {
   flex: 1;
 }
 
-.filme-title {
+.filme-info h1 {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 15px;
@@ -62,249 +58,373 @@ body {
 
 .filme-meta {
   display: flex;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
   font-size: 16px;
-  color: var(--medium-gray);
-}
-
-.filme-year {
-  margin-right: 15px;
-}
-
-.filme-genres {
-  font-style: italic;
+  color: #666;
 }
 
 .filme-rating {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
 }
 
-.rating-value {
-  font-size: 24px;
-  font-weight: 700;
-  margin-right: 10px;
-  color: var(--primary-color);
-}
-
-.rating-stars {
+.filme-stars {
   display: flex;
-  margin-right: 10px;
+  color: #ffc107;
 }
 
-.star {
-  color: #d3d3d3;
-  font-size: 20px;
+.filme-stars i {
+  margin-right: 2px;
 }
 
-.star.filled {
-  color: #ffbb00;
-}
-
-.rating-count {
-  color: var(--medium-gray);
-  font-size: 14px;
-}
-
-/* Sinopse */
-.filme-synopsis {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.filme-synopsis h2 {
-  font-size: 20px;
-  margin-bottom: 15px;
-  color: var(--primary-color);
-}
-
-.filme-synopsis p {
-  line-height: 1.7;
-  color: var(--text-color);
-}
-
-/* Área de avaliação */
-.avaliacao-section {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.avaliacao-section h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: var(--primary-color);
-}
-
-.login-prompt {
-  background-color: var(--light-gray);
-  padding: 15px;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.avaliacao-form {
-  max-width: 600px;
-}
-
-.rating-input {
-  margin-bottom: 20px;
-}
-
-.rating-input h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.star-rating {
+/* Gêneros */
+.filme-generos {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-}
-
-.star-input {
-  display: none;
-}
-
-.star-label {
-  font-size: 30px;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.2s;
-  margin-right: 5px;
-}
-
-.star-input:checked ~ .star-label,
-.star-input:checked ~ .star-label ~ .star-label {
-  color: #ffbb00;
-}
-
-.star-rating:hover .star-label {
-  color: #ccc;
-}
-
-.star-label:hover,
-.star-label:hover ~ .star-label {
-  color: #ffbb00;
-}
-
-.comentario-input {
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 20px;
 }
 
-.comentario-input textarea {
-  width: 100%;
-  min-height: 120px;
-  resize: vertical;
-}
-
-.btn-submit {
+.genero-tag {
   background-color: var(--secondary-color);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  display: inline-block;
 }
 
-/* Outras avaliações */
-.other-reviews h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
+/* Ações */
+.filme-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0099cc;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+/* Seções */
+.filme-detalhes,
+.avaliacoes-section,
+.avaliacao-form {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.filme-detalhes h2,
+.avaliacoes-section h2,
+.avaliacao-form h2 {
   color: var(--primary-color);
+  font-size: 22px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
-.reviews-list {
+.filme-sinopse,
+.filme-equipe {
+  margin-bottom: 20px;
+}
+
+.equipe-info {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.review-item {
-  background-color: var(--light-gray);
-  padding: 20px;
+.equipe-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.equipe-item strong {
+  min-width: 80px;
+}
+
+/* Avaliações */
+#avaliacoes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.avaliacao-card {
+  background-color: #f9f9f9;
   border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid var(--secondary-color);
 }
 
-.review-header {
+.avaliacao-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
-.reviewer {
-  font-weight: 600;
-  font-size: 16px;
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.review-rating {
+.user-info i {
+  color: #666;
+  font-size: 18px;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mini-stars {
+  color: #ffc107;
   display: flex;
 }
 
-.review-rating .star {
-  font-size: 16px;
-}
-
-.review-date {
-  color: var(--medium-gray);
+.data-avaliacao {
+  color: #888;
   font-size: 14px;
 }
 
-.review-content {
-  color: var(--text-color);
-  line-height: 1.6;
+.avaliacao-content {
+  color: #444;
+  line-height: 1.5;
 }
 
-.no-reviews {
-  color: var(--medium-gray);
-  font-style: italic;
+.no-avaliacoes {
   text-align: center;
+  padding: 20px;
+  color: #666;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-style: italic;
+}
+
+/* Formulário de avaliação */
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stars-select {
+  display: flex;
+}
+
+.stars-select i {
+  color: #ffc107;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Filmes relacionados */
+.related-movies {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 
-/* Responsivo */
+.related-movies h3 {
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.movie-card {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.movie-card:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.movie-poster {
+  width: 60px;
+  height: 90px;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.movie-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.movie-info .year {
+  color: #666;
+  font-size: 14px;
+}
+
+.movie-stars {
+  color: #ffc107;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Estilos para filmes relacionados no sidebar */
+.related-movie-card {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.related-movie-card:hover {
+  transform: translateY(-2px);
+}
+
+.related-movie-card:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.related-movie-poster {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.related-movie-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.related-movie-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: var(--primary-color);
+}
+
+.related-movie-info span {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* Media queries */
 @media (max-width: 768px) {
   .filme-header {
     flex-direction: column;
   }
 
-  .filme-poster {
-    margin-right: 0;
-    margin-bottom: 20px;
-    flex: 0 0 auto;
+  .filme-cover {
     width: 100%;
-    max-width: 240px;
-    align-self: center;
+    max-width: 200px;
+    margin: 0 auto 20px;
   }
 
-  .poster-image,
-  .poster-placeholder {
-    height: auto;
-    aspect-ratio: 2/3;
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .filme-detail-container {
-    padding: 15px 10px;
-  }
-
-  .filme-content {
-    padding: 15px;
-  }
-
-  .filme-title {
-    font-size: 22px;
-  }
-
-  .review-header {
+  .filme-meta {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 5px;
   }
 
-  .reviewer {
-    margin-bottom: 5px;
+  .filme-actions {
+    flex-direction: column;
   }
 
-  .review-date {
-    margin-top: 5px;
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
   }
 }

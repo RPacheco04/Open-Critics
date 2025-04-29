@@ -1,7 +1,7 @@
 /**
  * API Service para integração com o backend
  */
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:8001/api";
 
 const ApiService = {
   // Métodos de autenticação
@@ -236,7 +236,15 @@ const ApiService = {
      */
     obterPorFilme: async (filmeId) => {
       try {
-        const response = await fetch(`${API_URL}/avaliacoes/?filme=${filmeId}`);
+        const token = localStorage.getItem("auth_token");
+        const response = await fetch(
+          `${API_URL}/avaliacoes/?filme=${filmeId}`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Erro ao buscar avaliações do filme");

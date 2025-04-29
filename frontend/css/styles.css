@@ -1,0 +1,147 @@
+/* Estilos globais para todas as páginas */
+
+/* Usar as mesmas variáveis que estão no main.css */
+:root {
+  --primary-color: #0d253f;
+  --secondary-color: #01b4e4;
+  --accent-color: #90cea1;
+  --text-color: #333;
+  --light-text: #fff;
+  --error-color: #e74c3c;
+  --border-color: #ddd;
+  --dark-gray: #333;
+  --medium-gray: #666;
+  --light-gray: #f4f4f4;
+  --hover-color: #0077b6;
+  --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* Reset e estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--light-gray);
+}
+
+/* Header */
+header {
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  padding: 15px 0;
+  box-shadow: var(--box-shadow);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo i {
+  font-size: 24px;
+  color: var(--accent-color);
+}
+
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Barra de pesquisa */
+.search-bar {
+  display: flex;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+}
+
+.search-bar button {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.search-bar button:hover {
+  background-color: var(--hover-color);
+}
+
+/* User Menu */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#username {
+  font-weight: 600;
+}
+
+#logout-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+#logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Layout principal */
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+  display: flex;
+  gap: 20px;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-bar {
+    max-width: 100%;
+    margin: 10px 0;
+  }
+
+  .container {
+    flex-direction: column;
+  }
+}

@@ -61,7 +61,7 @@ def user_login(request):
             {"error": "Credenciais inválidas"}, status=status.HTTP_401_UNAUTHORIZED
         )
 
-    #se houver um token existente, deleta
+    # se houver um token existente, deleta
     Token.objects.filter(user=user).delete()
 
     # cria um novo token
@@ -85,7 +85,7 @@ def user_login(request):
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def user_logout(request):
-    #Deleta o token do usuário para efetuar o logout
+    # Deleta o token do usuário para efetuar o logout
     Token.objects.filter(user=request.user).delete()
     return Response({"message": "Logout realizado com sucesso"})
 
@@ -131,14 +131,14 @@ class GeneroViewSet(viewsets.ModelViewSet):
     serializer_class = GeneroSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["nome"]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
 
 class FilmeViewSet(viewsets.ModelViewSet):
     queryset = Filme.objects.all()
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["titulo", "sinopse", "diretor", "elenco"]
-    ordering_fields = ["titulo", "ano", "data_cadastro", "visualizacoes"]
+    search_fields = ["titulo", "sinopse"]
+    ordering_fields = ["titulo", "ano", "data_cadastro"]
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_serializer_class(self):
@@ -146,24 +146,21 @@ class FilmeViewSet(viewsets.ModelViewSet):
             return FilmeListSerializer
         return FilmeDetailSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        # Incrementa contador de visualizações
-        filme = self.get_object()
-        filme.atualizar_visualizacoes()
-        return super().retrieve(request, *args, **kwargs)
-
     @action(detail=False, methods=["get"])
     def trending(self, request):
         """Endpoint para filmes em tendência"""
-        # Obter filmes marcados como trending ou com muitas visualizações recentes
-        trending_by_flag = Filme.objects.filter(is_trending=True)
+        # Selecionar filmes aleatoriamente (já que não temos is_trending)
+        import random
 
-        # Se não houver filmes marcados manualmente, seleciona os mais visualizados
-        if not trending_by_flag:
-            trending_by_views = Filme.objects.order_by("-visualizacoes")[:10]
-            serializer = FilmeListSerializer(trending_by_views, many=True)
+        all_filmes = list(Filme.objects.all())
+
+        # Pegar até 10 filmes aleatórios
+        num_filmes = min(10, len(all_filmes))
+        if num_filmes > 0:
+            random_filmes = random.sample(all_filmes, num_filmes)
+            serializer = FilmeListSerializer(random_filmes, many=True)
         else:
-            serializer = FilmeListSerializer(trending_by_flag, many=True)
+            serializer = FilmeListSerializer([], many=True)
 
         return Response(serializer.data)
 
@@ -193,14 +190,18 @@ class FilmeViewSet(viewsets.ModelViewSet):
                 serializer = FilmeListSerializer(suggested_films, many=True)
                 return Response(serializer.data)
 
-        # Caso padrão: retorna filmes com boas avaliações
-        top_rated = (
-            Filme.objects.annotate(avg_rating=Avg("avaliacoes__nota"))
-            .filter(avg_rating__gte=4)
-            .order_by("-avg_rating")[:10]
-        )
+        # Caso padrão para usuários não autenticados: retorna filmes aleatórios
+        import random
 
-        serializer = FilmeListSerializer(top_rated, many=True)
+        all_filmes = list(Filme.objects.all())
+        num_filmes = min(10, len(all_filmes))
+
+        if num_filmes > 0:
+            random_filmes = random.sample(all_filmes, num_filmes)
+            serializer = FilmeListSerializer(random_filmes, many=True)
+        else:
+            serializer = FilmeListSerializer([], many=True)
+
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"])
@@ -209,9 +210,32 @@ class FilmeViewSet(viewsets.ModelViewSet):
         queryset = Filme.objects.all()
 
         # Filtragem por gênero
-        generos_ids = request.query_params.getlist("genero")
-        if generos_ids:
-            queryset = queryset.filter(generos__id__in=generos_ids).distinct()
+        generos_param = request.query_params.get("genero")
+        if generos_param:
+            # Trata tanto lista de valores como valores separados por vírgula
+            if "," in generos_param:
+                # Se vier como string separada por vírgula, converte para lista
+                try:
+                    generos_ids = [
+                        int(g.strip()) for g in generos_param.split(",") if g.strip()
+                    ]
+                    queryset = queryset.filter(generos__id__in=generos_ids).distinct()
+                except ValueError:
+                    # Se falhar a conversão para int, ignora o filtro de gênero
+                    pass
+            else:
+                # Se for um único valor
+                try:
+                    generos_ids = [int(generos_param)]
+                    queryset = queryset.filter(generos__id__in=generos_ids).distinct()
+                except ValueError:
+                    # Se falhar a conversão para int, ignora o filtro de gênero
+                    pass
+        else:
+            # Tenta o método getlist também para compatibilidade com formatos diferentes
+            generos_ids = request.query_params.getlist("genero")
+            if generos_ids:
+                queryset = queryset.filter(generos__id__in=generos_ids).distinct()
 
         # Filtragem por ano
         ano = request.query_params.get("ano")

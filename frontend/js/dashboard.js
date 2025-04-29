@@ -194,18 +194,28 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
-   * Cria um card de filme
+   * Exibe os filmes em um container
+   * @param {Array} movies - Lista de filmes
+   * @param {HTMLElement} container - Container para exibir os filmes
    */
   function createMovieCard(filme) {
     const card = document.createElement("div");
     card.className = "movie-card";
     card.dataset.id = filme.id;
 
-    // Imagem do filme
+    // Usar imagens locais baseadas no ID do filme
+    const posterUrl = `img/filmes/filme${filme.id || 1}.jpg`;
+
     const img = document.createElement("img");
-    img.src = filme.capa_url || "img/default-movie.jpg";
+    img.src = posterUrl;
     img.alt = filme.titulo;
     img.className = "movie-poster";
+    // Adicionar fallback para imagens não encontradas
+    img.onerror = function () {
+      this.src = "img/filmes/default.jpg";
+      // Prevent further error attempts
+      this.onerror = null;
+    };
 
     // Informações do filme
     const info = document.createElement("div");
@@ -241,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const ratingText = document.createElement("span");
     ratingText.textContent = `${ratingValue.toFixed(1)} (${
-      filme.quantidade_avaliacoes
+      filme.quantidade_avaliacoes || 0
     })`;
 
     rating.appendChild(stars);

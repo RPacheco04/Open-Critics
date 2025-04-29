@@ -1,312 +1,411 @@
 /**
- * Script específico para a página de detalhes do filme
+ * JavaScript para a página de detalhes do filme
  */
 document.addEventListener("DOMContentLoaded", function () {
   // Verificar autenticação
-  const isLoggedIn = checkAuthentication();
+  const token = localStorage.getItem("auth_token");
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
 
-  // Obter ID do filme da URL
+  // Pegar ID do filme da URL
   const urlParams = new URLSearchParams(window.location.search);
   const filmeId = urlParams.get("id");
 
   if (!filmeId) {
-    alert("ID do filme não encontrado");
+    alert("ID do filme não especificado.");
     window.location.href = "dashboard.html";
     return;
   }
 
-  // Simulação de dados do filme
-  const filmeData = {
-    id: filmeId,
-    titulo: "Matrix",
-    ano: 1999,
-    generos: ["Ação", "Ficção Científica"],
-    sinopse:
-      "Um hacker descobre que a realidade como a conhecemos é uma simulação chamada Matrix, criada por máquinas para subjugar a raça humana. Junto com um grupo de rebeldes, ele luta para libertar a humanidade.",
-    capa_url: "img/default-movie.jpg",
-    media_avaliacoes: 4.8,
-    avaliacoes: [
-      {
-        usuario: "user123",
-        nota: 5,
-        comentario:
-          "Um filme revolucionário que mudou a indústria cinematográfica. Efeitos visuais impressionantes e conceito filosófico profundo.",
-        data: "2023-05-15",
-      },
-      {
-        usuario: "cinefilo87",
-        nota: 4,
-        comentario:
-          "Excelente filme com uma premissa original. As sequências de ação são espetaculares, mas algumas partes do roteiro são um pouco confusas.",
-        data: "2023-06-22",
-      },
-    ],
-  };
+  // Configurar eventos da página
+  setupEvents();
 
-  // Exibir dados do filme
-  exibirDadosFilme(filmeData);
+  // Carregar dados do filme
+  loadFilmeDetails(filmeId);
 
-  // Inicializar sistema de avaliação
-  initStarRating();
+  /**
+   * Configura eventos da página
+   */
+  function setupEvents() {
+    // Botão de logout
+    document.getElementById("logout-btn").addEventListener("click", logout);
 
-  // Manipular envio do formulário de avaliação
-  const reviewForm = document.getElementById("reviewForm");
-  if (reviewForm) {
-    reviewForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      if (!isLoggedIn) {
-        alert("Você precisa estar logado para avaliar filmes.");
-        return;
-      }
-
-      const ratingValue = document.getElementById("ratingValue").value;
-      const reviewText = document.getElementById("reviewText").value;
-
-      if (!ratingValue) {
-        alert("Por favor, selecione uma nota para o filme.");
-        return;
-      }
-
-      // Em um sistema real, enviaríamos a avaliação para o servidor
-      console.log("Avaliação enviada:", {
-        filmeId,
-        nota: ratingValue,
-        comentario: reviewText,
-        usuario: localStorage.getItem("auth_username") || "usuário",
+    // Exibir formulário de avaliação
+    document
+      .getElementById("btn-avaliar")
+      .addEventListener("click", function () {
+        const avaliacaoForm = document.getElementById("avaliacao-form-section");
+        avaliacaoForm.classList.remove("hidden");
+        avaliacaoForm.scrollIntoView({ behavior: "smooth" });
       });
 
-      // Simulação de sucesso
-      alert("Avaliação enviada com sucesso!");
-
-      // Limpar formulário
-      document.getElementById("ratingValue").value = "";
-      document.querySelectorAll(".rating-stars .star").forEach((star) => {
-        star.classList.remove("selected");
-        star.classList.remove("filled");
+    // Cancelar avaliação
+    document
+      .getElementById("cancel-review")
+      .addEventListener("click", function () {
+        document
+          .getElementById("avaliacao-form-section")
+          .classList.add("hidden");
       });
-      document.getElementById("reviewText").value = "";
-    });
-  }
 
-  // Função para exibir os dados do filme
-  function exibirDadosFilme(filme) {
-    document.title = `OpenCritics - ${filme.titulo}`;
-
-    const filmePoster = document.getElementById("filmePoster");
-    const filmeTitulo = document.getElementById("filmeTitulo");
-    const filmeAno = document.getElementById("filmeAno");
-    const filmeGeneros = document.getElementById("filmeGeneros");
-    const filmeSinopse = document.getElementById("filmeSinopse");
-    const mediaAvaliacoes = document.getElementById("mediaAvaliacoes");
-    const totalAvaliacoes = document.getElementById("totalAvaliacoes");
-    const avaliacoesContainer = document.getElementById("avaliacoesContainer");
-    const nenhumaAvaliacaoMsg = document.getElementById("nenhumaAvaliacaoMsg");
-
-    if (filmePoster) filmePoster.src = filme.capa_url;
-    if (filmePoster) filmePoster.alt = filme.titulo;
-    if (filmeTitulo) filmeTitulo.textContent = filme.titulo;
-    if (filmeAno) filmeAno.textContent = filme.ano;
-    if (filmeGeneros) filmeGeneros.textContent = filme.generos.join(", ");
-    if (filmeSinopse) filmeSinopse.textContent = filme.sinopse;
-
-    // Atualizar média de avaliações
-    if (mediaAvaliacoes) {
-      mediaAvaliacoes.textContent = filme.media_avaliacoes.toFixed(1);
-
-      // Preencher estrelas conforme a média
-      const ratingStars = document.querySelectorAll(".rating-display .star");
-      ratingStars.forEach((star, index) => {
-        if (index < Math.floor(filme.media_avaliacoes)) {
-          star.classList.add("filled");
-        } else {
-          star.classList.remove("filled");
-        }
-      });
-    }
-
-    // Atualizar total de avaliações
-    if (totalAvaliacoes)
-      totalAvaliacoes.textContent = `(${filme.avaliacoes.length} avaliações)`;
-
-    // Exibir avaliações
-    if (avaliacoesContainer && nenhumaAvaliacaoMsg) {
-      if (filme.avaliacoes.length > 0) {
-        nenhumaAvaliacaoMsg.style.display = "none";
-        avaliacoesContainer.innerHTML = "";
-
-        filme.avaliacoes.forEach((avaliacao) => {
-          const avaliacaoElement = document.createElement("div");
-          avaliacaoElement.className = "review-item";
-
-          const headerElement = document.createElement("div");
-          headerElement.className = "review-header";
-
-          const userElement = document.createElement("span");
-          userElement.className = "reviewer";
-          userElement.textContent = avaliacao.usuario;
-
-          const ratingElement = document.createElement("div");
-          ratingElement.className = "review-rating";
-
-          // Adicionar estrelas
-          for (let i = 1; i <= 5; i++) {
-            const starElement = document.createElement("span");
-            starElement.className = `star ${
-              i <= avaliacao.nota ? "filled" : ""
-            }`;
-            starElement.innerHTML = "&#9733;";
-            ratingElement.appendChild(starElement);
-          }
-
-          const dateElement = document.createElement("span");
-          dateElement.className = "review-date";
-          dateElement.textContent = avaliacao.data;
-
-          const commentElement = document.createElement("p");
-          commentElement.textContent = avaliacao.comentario;
-
-          headerElement.appendChild(userElement);
-          headerElement.appendChild(ratingElement);
-          headerElement.appendChild(dateElement);
-
-          avaliacaoElement.appendChild(headerElement);
-          avaliacaoElement.appendChild(commentElement);
-
-          avaliacoesContainer.appendChild(avaliacaoElement);
-        });
-      } else {
-        nenhumaAvaliacaoMsg.style.display = "block";
-      }
-    }
-  }
-
-  // Função para inicializar o sistema de avaliação por estrelas
-  function initStarRating() {
-    const stars = document.querySelectorAll(".rating-stars .star");
-    const ratingValue = document.getElementById("ratingValue");
-
-    stars.forEach((star, index) => {
+    // Seleção de estrelas
+    const stars = document.querySelectorAll(".stars-select i");
+    stars.forEach((star) => {
       star.addEventListener("click", function () {
-        const value = index + 1;
-        ratingValue.value = value;
+        const value = this.getAttribute("data-value");
+        document.getElementById("rating-value").textContent = `${value}/5`;
 
         // Atualizar visual das estrelas
-        stars.forEach((s, i) => {
-          if (i < value) {
-            s.classList.add("selected");
-            s.classList.add("filled");
-          } else {
-            s.classList.remove("selected");
-            s.classList.remove("filled");
-          }
-        });
-      });
-
-      star.addEventListener("mouseover", function () {
-        const value = index + 1;
-
-        // Destacar estrelas no hover
-        stars.forEach((s, i) => {
-          if (i < value) {
-            s.classList.add("hover");
-          } else {
-            s.classList.remove("hover");
-          }
-        });
-      });
-
-      star.addEventListener("mouseout", function () {
-        // Remover destaque ao sair do hover
         stars.forEach((s) => {
-          s.classList.remove("hover");
+          const starValue = s.getAttribute("data-value");
+          if (starValue <= value) {
+            s.className = "fas fa-star";
+          } else {
+            s.className = "far fa-star";
+          }
         });
       });
     });
+
+    // Envio do formulário de avaliação
+    document
+      .getElementById("form-avaliacao")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        submitAvaliacao(filmeId);
+      });
   }
 
-  // Função para verificar autenticação
-  function checkAuthentication() {
-    const authToken = localStorage.getItem("auth_token");
-    const expiration = localStorage.getItem("auth_expiration");
-    const username = localStorage.getItem("auth_username");
+  /**
+   * Carrega os detalhes do filme
+   * @param {number} filmeId - ID do filme
+   */
+  async function loadFilmeDetails(filmeId) {
+    try {
+      // Carregar detalhes do filme
+      const filme = await ApiService.filmes.obterPorId(filmeId);
+      updateFilmeUI(filme);
 
-    // Verificações de segurança mais robustas
-    if (!authToken || !expiration || !username) {
-      // Limpar dados incompletos para evitar problemas
-      clearAuthData();
-      hideAuthenticatedContent();
-      return false;
-    }
+      // Carregar avaliações
+      const avaliacoes = await ApiService.avaliacoes.obterPorFilme(filmeId);
+      updateAvaliacoesUI(avaliacoes);
 
-    const expirationTime = parseInt(expiration);
+      // Carregar filmes relacionados (mesmos gêneros)
+      if (filme.generos && filme.generos.length > 0) {
+        const generoIds = filme.generos.map((g) => g.id);
 
-    // Verificar se o timestamp é válido
-    if (isNaN(expirationTime)) {
-      clearAuthData();
-      hideAuthenticatedContent();
-      return false;
-    }
+        // Usar o primeiro gênero para buscar filmes relacionados
+        const filtro = { genero: generoIds[0] };
+        const filmesRelacionados = await ApiService.filmes.filtrar(filtro);
 
-    // Se o token expirou, limpar dados
-    if (Date.now() > expirationTime) {
-      clearAuthData();
-      hideAuthenticatedContent();
-      return false;
-    }
+        // Filtrar o filme atual da lista de relacionados
+        const relacionadosFiltrados = filmesRelacionados.filter(
+          (f) => f.id !== filme.id
+        );
 
-    // Renovar o tempo de expiração a cada ação (se não for "lembrar de mim")
-    if (expirationTime - Date.now() < 30 * 24 * 60 * 60 * 1000) {
-      const newExpiration = Date.now() + 60 * 60 * 1000; // 1 hora
-      localStorage.setItem("auth_expiration", newExpiration.toString());
-    }
-
-    // Mostrar conteúdo para usuários autenticados
-    showAuthenticatedContent(username);
-    return true;
-  }
-
-  // Esconder elementos que exigem autenticação
-  function hideAuthenticatedContent() {
-    // Esconder o formulário de avaliação
-    const reviewForm = document.getElementById("reviewForm");
-    if (reviewForm) {
-      reviewForm.style.display = "none";
-    }
-
-    // Mostrar a mensagem de login
-    const loginMessage = document.getElementById("loginMessage");
-    if (loginMessage) {
-      loginMessage.style.display = "block";
+        updateRelacionadosUI(relacionadosFiltrados.slice(0, 5));
+      }
+    } catch (error) {
+      console.error("Erro ao carregar detalhes do filme:", error);
+      alert("Erro ao carregar dados do filme. Por favor, tente novamente.");
     }
   }
 
-  // Mostrar elementos para usuários autenticados
-  function showAuthenticatedContent(username) {
-    // Mostrar o formulário de avaliação
-    const reviewForm = document.getElementById("reviewForm");
-    if (reviewForm) {
-      reviewForm.style.display = "block";
+  /**
+   * Atualiza a interface com os detalhes do filme
+   * @param {Object} filme - Dados do filme
+   */
+  function updateFilmeUI(filme) {
+    // Título da página
+    document.title = `${filme.titulo} - CineReview`;
+
+    // Informações básicas
+    document.getElementById("filme-titulo").textContent = filme.titulo;
+    document.getElementById("filme-ano").textContent = `Ano: ${filme.ano}`;
+    document.getElementById("filme-duracao").textContent = "";
+    document.getElementById("filme-nota").textContent = `Nota: ${
+      filme.media_avaliacoes ? filme.media_avaliacoes.toFixed(1) : "--"
+    }`;
+    document.getElementById("filme-total-avaliacoes").textContent = `(${
+      filme.quantidade_avaliacoes || 0
+    } avaliações)`;
+
+    // Atualizar imagem usando uma imagem local baseada no ID
+    const filmeCapa = document.getElementById("filme-capa");
+    filmeCapa.src = `img/filmes/filme${filme.id}.jpg`;
+    filmeCapa.alt = filme.titulo;
+    filmeCapa.onerror = function () {
+      this.src = "img/filmes/default.jpg";
+      // Prevent further error attempts
+      this.onerror = null;
+    };
+
+    // Sinopse e equipe
+    document.getElementById("filme-sinopse-texto").textContent =
+      filme.sinopse || "Sem sinopse disponível.";
+    document.getElementById("filme-diretor").textContent = "Não informado";
+    document.getElementById("filme-elenco").textContent = "Não informado";
+
+    // Gêneros
+    const generosContainer = document.getElementById("filme-generos");
+    generosContainer.innerHTML = "";
+
+    if (filme.generos && filme.generos.length > 0) {
+      filme.generos.forEach((genero) => {
+        const generoTag = document.createElement("span");
+        generoTag.className = "genero-tag";
+        generoTag.textContent = genero.nome;
+        generosContainer.appendChild(generoTag);
+      });
+    } else {
+      const generoTag = document.createElement("span");
+      generoTag.className = "genero-tag";
+      generoTag.textContent = "Sem gênero";
+      generosContainer.appendChild(generoTag);
     }
 
-    // Esconder a mensagem de login
-    const loginMessage = document.getElementById("loginMessage");
-    if (loginMessage) {
-      loginMessage.style.display = "none";
+    // Atualizar estrelas de avaliação
+    updateStars(filme.media_avaliacoes || 0);
+  }
+
+  /**
+   * Atualiza as estrelas de avaliação
+   * @param {number} rating - Valor da avaliação
+   */
+  function updateStars(rating) {
+    const stars = document.querySelectorAll(".filme-stars i");
+
+    stars.forEach((star, index) => {
+      if (index < Math.floor(rating)) {
+        star.className = "fas fa-star";
+      } else if (index < Math.ceil(rating) && rating % 1 >= 0.5) {
+        star.className = "fas fa-star-half-alt";
+      } else {
+        star.className = "far fa-star";
+      }
+    });
+  }
+
+  /**
+   * Atualiza a interface com as avaliações do filme
+   * @param {Array} avaliacoes - Lista de avaliações
+   */
+  function updateAvaliacoesUI(avaliacoes) {
+    const avaliacoesContainer = document.getElementById("avaliacoes-lista");
+    avaliacoesContainer.innerHTML = "";
+
+    if (avaliacoes.length === 0) {
+      const noAvaliacoes = document.createElement("div");
+      noAvaliacoes.className = "no-avaliacoes";
+      noAvaliacoes.textContent =
+        "Nenhuma avaliação encontrada para este filme.";
+      avaliacoesContainer.appendChild(noAvaliacoes);
+      return;
     }
 
-    // Exibir nome do usuário no formulário se necessário
-    const userDisplayElement = document.getElementById("currentUser");
-    if (userDisplayElement) {
-      userDisplayElement.textContent = username;
+    avaliacoes.forEach((avaliacao) => {
+      const avaliacaoCard = document.createElement("div");
+      avaliacaoCard.className = "avaliacao-card";
+
+      // Cabeçalho da avaliação
+      const header = document.createElement("div");
+      header.className = "avaliacao-header";
+
+      const userInfo = document.createElement("div");
+      userInfo.className = "user-info";
+      userInfo.innerHTML = `
+        <i class="fas fa-user-circle"></i>
+        <span>${avaliacao.usuario.username}</span>
+      `;
+
+      const ratingInfo = document.createElement("div");
+      ratingInfo.className = "rating-info";
+
+      const stars = document.createElement("div");
+      stars.className = "mini-stars";
+
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement("i");
+        if (i <= avaliacao.nota) {
+          star.className = "fas fa-star";
+        } else {
+          star.className = "far fa-star";
+        }
+        stars.appendChild(star);
+      }
+
+      ratingInfo.appendChild(stars);
+      ratingInfo.innerHTML += `<span class="data-avaliacao">${formatDate(
+        avaliacao.data_avaliacao
+      )}</span>`;
+
+      header.appendChild(userInfo);
+      header.appendChild(ratingInfo);
+
+      // Conteúdo da avaliação
+      const content = document.createElement("div");
+      content.className = "avaliacao-content";
+      content.textContent = avaliacao.comentario || "Sem comentários.";
+
+      avaliacaoCard.appendChild(header);
+      avaliacaoCard.appendChild(content);
+
+      avaliacoesContainer.appendChild(avaliacaoCard);
+    });
+  }
+
+  /**
+   * Atualiza a interface com filmes relacionados
+   * @param {Array} filmes - Lista de filmes relacionados
+   */
+  function updateRelacionadosUI(filmes) {
+    const relacionadosContainer = document.getElementById(
+      "related-movies-list"
+    );
+    relacionadosContainer.innerHTML = "";
+
+    if (filmes.length === 0) {
+      relacionadosContainer.innerHTML =
+        "<p>Nenhum filme relacionado encontrado.</p>";
+      return;
+    }
+
+    filmes.forEach((filme) => {
+      const movieCard = document.createElement("div");
+      movieCard.className = "related-movie-card";
+      movieCard.dataset.id = filme.id;
+
+      // Usar imagem local baseada no ID
+      const posterUrl = `img/filmes/filme${filme.id}.jpg`;
+
+      movieCard.innerHTML = `
+        <img src="${posterUrl}" alt="${
+        filme.titulo
+      }" class="related-movie-poster" onerror="this.onerror=null; this.src='img/filmes/default.jpg'">
+        <div class="related-movie-info">
+          <h4>${filme.titulo}</h4>
+          <span>${filme.ano}</span>
+          <div class="mini-stars">
+            ${getStarsHTML(filme.media_avaliacoes || 0)}
+          </div>
+        </div>
+      `;
+
+      movieCard.addEventListener("click", function () {
+        window.location.href = `filme_detail.html?id=${filme.id}`;
+      });
+
+      relacionadosContainer.appendChild(movieCard);
+    });
+  }
+
+  /**
+   * Gera HTML para estrelas de avaliação
+   * @param {number} rating - Valor da avaliação
+   * @returns {string} HTML das estrelas
+   */
+  function getStarsHTML(rating) {
+    let html = "";
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(rating)) {
+        html += '<i class="fas fa-star"></i>';
+      } else if (i === Math.ceil(rating) && rating % 1 >= 0.5) {
+        html += '<i class="fas fa-star-half-alt"></i>';
+      } else {
+        html += '<i class="far fa-star"></i>';
+      }
+    }
+
+    return html;
+  }
+
+  /**
+   * Formata data para exibição
+   * @param {string} dateString - String de data
+   * @returns {string} Data formatada
+   */
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  /**
+   * Envia uma nova avaliação
+   * @param {number} filmeId - ID do filme
+   */
+  async function submitAvaliacao(filmeId) {
+    const token = localStorage.getItem("auth_token");
+
+    // Encontra todas as estrelas selecionadas
+    const selectedStars = document.querySelectorAll(".stars-select i.fas");
+
+    // Verifica se pelo menos uma estrela foi selecionada
+    if (!selectedStars || selectedStars.length === 0) {
+      alert("Por favor, selecione uma nota para o filme.");
+      return;
+    }
+
+    // Pega o valor da última estrela selecionada (a maior nota)
+    const starValue =
+      selectedStars[selectedStars.length - 1].getAttribute("data-value");
+    const comentario = document.getElementById("comentario").value;
+
+    if (!starValue) {
+      alert("Por favor, selecione uma nota para o filme.");
+      return;
+    }
+
+    try {
+      const avaliacaoData = {
+        filme: filmeId,
+        nota: parseInt(starValue),
+        comentario: comentario,
+      };
+
+      await ApiService.avaliacoes.adicionar(avaliacaoData, token);
+
+      alert("Avaliação enviada com sucesso!");
+
+      // Recarregar página para mostrar a nova avaliação
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao enviar avaliação:", error);
+
+      if (error.message && error.message.includes("já avaliou")) {
+        alert(
+          "Você já avaliou este filme. Só é permitida uma avaliação por usuário."
+        );
+      } else {
+        alert("Erro ao enviar avaliação. Por favor, tente novamente.");
+      }
     }
   }
 
-  // Função para limpar todos os dados de autenticação
-  function clearAuthData() {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_expiration");
-    localStorage.removeItem("auth_username");
-    sessionStorage.clear();
+  /**
+   * Realiza logout
+   */
+  async function logout() {
+    try {
+      const token = localStorage.getItem("auth_token");
+      await ApiService.auth.logout(token);
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    } finally {
+      // Limpa dados de autenticação
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_expiration");
+      localStorage.removeItem("auth_username");
+      localStorage.removeItem("user_info");
+
+      // Redireciona para login
+      window.location.href = "login.html";
+    }
   }
 });
