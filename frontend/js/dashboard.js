@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Imagem do filme
     const img = document.createElement("img");
-    img.src = filme.capa_url || "img/default-movie.jpg";
+    img.src = filme.capa_url || "img/matrix.jpg";
     img.alt = filme.titulo;
     img.className = "movie-poster";
 
