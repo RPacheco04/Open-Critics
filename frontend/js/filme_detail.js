@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     generos: ["Ação", "Ficção Científica"],
     sinopse:
       "Um hacker descobre que a realidade como a conhecemos é uma simulação chamada Matrix, criada por máquinas para subjugar a raça humana. Junto com um grupo de rebeldes, ele luta para libertar a humanidade.",
-    capa_url: "img/default-movie.jpg",
+    capa_url: "img/matrix.jpg",
     media_avaliacoes: 4.8,
     avaliacoes: [
       {
